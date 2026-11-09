@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ error_title or "Something went wrong" }}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <p class="eyebrow">Error</p>
+  <h1>{{ error_title or "Something went wrong" }}</h1>
+  <p class="lede">{{ error_body or "Please try again." }}</p>
+  <p class="page-head__action">
+    <a class="btn btn--primary" href="{{ '/dashboard' if current_user else '/login' }}">
+      {% if current_user %}Back to dashboard{% else %}Go to sign in{% endif %}
+    </a>
+  </p>
+</div>
+{% endblock %}

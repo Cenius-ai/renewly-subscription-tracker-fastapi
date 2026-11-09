@@ -1,0 +1,48 @@
+<section class="panel" aria-labelledby="upcoming-heading">
+  <div class="panel__head">
+    <h2 class="section-title" id="upcoming-heading">Upcoming renewals</h2>
+    <p class="meta">Inside each subscription&rsquo;s own lead time &middot; next 30 days</p>
+  </div>
+
+  {% if upcoming %}
+    <div class="table-scroll">
+      <table class="table">
+        <caption class="visually-hidden">Subscriptions whose next charge falls inside their reminder window</caption>
+        <thead>
+          <tr>
+            <th scope="col">Subscription</th>
+            <th scope="col">Renews</th>
+            <th scope="col">Charge</th>
+            <th scope="col" class="num">Countdown</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in upcoming %}
+            <tr{% if item.was_overdue %} class="row--overdue"{% endif %}>
+              <td>
+                <a href="/subscriptions/{{ item.subscription.id }}/edit">{{ item.subscription.name }}</a>
+                <span class="cell-meta">{{ item.subscription.category }}</span>
+              </td>
+              <td>{{ item.effective_date|human_date }}</td>
+              <td>{{ item.subscription.price_cents|money }} {{ item.subscription.currency }} / {{ item.subscription.billing_cycle|cycle_unit }}</td>
+              <td class="num">
+                <span class="pill{% if item.days == 0 %} pill--due{% elif item.is_urgent %} pill--urgent{% else %} pill--soon{% endif %}">{{ item.label }}</span>
+                {% if item.was_overdue %}<span class="flag">overdue date rolled forward</span>{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% elif total_count == 0 %}
+    <div class="empty">
+      <p>Add your first subscription and the next charge will show up here.</p>
+      <a class="btn btn--primary" href="/subscriptions/new">Add your first subscription</a>
+    </div>
+  {% else %}
+    <div class="empty">
+      <p>No charges fall inside their reminder window in the next 30 days. Nothing is due right now.</p>
+      <a class="btn" href="/subscriptions">Review subscriptions</a>
+    </div>
+  {% endif %}
+</section>

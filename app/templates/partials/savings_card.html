@@ -1,0 +1,13 @@
+<section class="card" aria-labelledby="savings-heading">
+  <p class="meta-label">Cancelled</p>
+  <h2 class="card-title" id="savings-heading">Saved by cancelling</h2>
+  {% if savings %}
+    {% for currency, total in savings.items() %}
+      <p class="savings__amount">{{ total.monthly_cents|money }} {{ currency }} <span class="savings__per">per month</span></p>
+      <p class="meta">{{ total.yearly_cents|money }} {{ currency }} per year, excluded from spend.</p>
+    {% endfor %}
+  {% else %}
+    <p class="savings__amount">0.00</p>
+    <p class="meta">Nothing cancelled yet. Cancel a subscription and the saving appears here.</p>
+  {% endif %}
+</section>

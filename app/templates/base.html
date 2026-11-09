@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Subscription tracker{% endblock %} · Renewly</title>
+  <meta name="description" content="Renewly is a self-hosted subscription tracker: see what renews next, what each month really costs, and what cancelling saved.">
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/fonts/fonts.css">
+  <link rel="stylesheet" href="/static/css/app.css">
+  <script src="/static/js/app.js" defer></script>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="wordmark" href="{{ '/dashboard' if current_user else '/login' }}">Renewly</a>
+      <nav class="topnav" aria-label="Primary">
+        {% if current_user %}
+          {% set path = request.url.path %}
+          <a href="/dashboard"{% if path == '/dashboard' %} aria-current="page"{% endif %}>Dashboard</a>
+          <a href="/subscriptions"{% if path.startswith('/subscriptions') and path != '/subscriptions/new' %} aria-current="page"{% endif %}>Subscriptions</a>
+          <a href="/subscriptions/new"{% if path == '/subscriptions/new' %} aria-current="page"{% endif %}>Add</a>
+        {% else %}
+          <a href="/login"{% if request.url.path == '/login' %} aria-current="page"{% endif %}>Sign in</a>
+          <a href="/signup"{% if request.url.path == '/signup' %} aria-current="page"{% endif %}>Create account</a>
+        {% endif %}
+      </nav>
+      <div class="topbar__actions">
+        <button type="button" class="cmdk-trigger" data-cmdk-open aria-label="Open the jump-to menu">
+          Jump to&hellip; <kbd>&#8984;K</kbd>
+        </button>
+        {% if current_user %}
+          <span class="topbar__user">{{ current_user.email }}</span>
+          <form method="post" action="/logout" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            <button type="submit" class="btn btn--quiet btn--sm">Log out</button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+    <div class="keyline" aria-hidden="true"></div>
+  </header>
+
+  <main id="main" class="shell">
+    {% if flashes %}
+      <div class="flash-stack" aria-live="polite">
+        {% for message in flashes %}
+          <p class="flash">{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="keyline" aria-hidden="true"></div>
+    <div class="site-footer__inner">
+      <p>Renewly &mdash; self-hosted subscription tracking. Your data stays in your own SQLite file.</p>
+      <p class="meta">{{ today|human_date }}</p>
+    </div>
+  </footer>
+
+  {% include "partials/command_palette.html" %}
+</body>
+</html>

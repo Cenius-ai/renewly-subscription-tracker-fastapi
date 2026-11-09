@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Subscriptions{% endblock %}
+
+{% block content %}
+<div class="page-head page-head--split">
+  <div>
+    <p class="eyebrow">Subscriptions</p>
+    <h1>Everything you pay for.</h1>
+    <p class="lede">
+      {{ total_count }} on file &middot; {{ active_count }} active &middot; {{ cancelled_count }} cancelled.
+      Reminder lead times feed the dashboard&rsquo;s upcoming renewals panel.
+    </p>
+  </div>
+  <p class="page-head__action">
+    <a class="btn btn--primary" href="/subscriptions/new">Add subscription</a>
+  </p>
+</div>
+
+{% if subscriptions %}
+  <nav class="filter-bar" aria-label="Filter subscriptions">
+    {% for option in filter_options %}
+      <a href="{{ option.href }}"{% if option.active %} aria-current="true"{% endif %}>{{ option.label }}</a>
+    {% endfor %}
+  </nav>
+{% endif %}
+
+{% if subscriptions %}
+  <div class="table-scroll">
+    <table class="table table--subscriptions">
+      <caption class="visually-hidden">Your subscriptions with price, renewal, reminder and actions</caption>
+      <thead>
+        <tr>
+          <th scope="col">Subscription</th>
+          <th scope="col">Price</th>
+          <th scope="col">Next renewal</th>
+          <th scope="col">Reminder</th>
+          <th scope="col">Status</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          {% include "partials/subscription_row.html" %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% elif total_count == 0 %}
+  <div class="empty empty--page">
+    <h2 class="section-title">No subscriptions yet</h2>
+    <p>Add the first service you pay for and Renewly will track its renewal, reminder lead time and monthly cost.</p>
+    <a class="btn btn--primary" href="/subscriptions/new">Add your first subscription</a>
+  </div>
+{% else %}
+  <div class="empty empty--page">
+    <h2 class="section-title">Nothing matches this filter</h2>
+    <p>There are no {{ status_filter }} subscriptions right now.</p>
+    <a class="btn" href="/subscriptions">Show all subscriptions</a>
+  </div>
+{% endif %}
+{% endblock %}

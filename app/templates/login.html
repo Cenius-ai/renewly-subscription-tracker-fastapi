@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+
+{% block content %}
+<div class="auth">
+  <section class="auth__intro">
+    <p class="eyebrow">Subscription audit</p>
+    <h1>See every charge before it lands.</h1>
+    <p class="lede">Renewly tracks your streaming and SaaS subscriptions: what renews next, what a month really costs, and what cancelling has already saved.</p>
+    <ul class="bullets">
+      <li>Renewal reminders use each subscription&rsquo;s own lead time.</li>
+      <li>Monthly and yearly totals are normalised across weekly, monthly and yearly billing.</li>
+      <li>Cancelled subscriptions drop out of spend and show up in your savings tally.</li>
+    </ul>
+  </section>
+
+  <section class="auth__card" aria-labelledby="login-heading">
+    <h2 class="card-title" id="login-heading">Sign in</h2>
+    {% if error %}
+      <p class="alert" role="alert">{{ error }}</p>
+    {% endif %}
+    <form method="post" action="/login" class="stack" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="next" value="{{ next_url }}">
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="username"
+          inputmode="email"
+          required
+          value="{{ email }}"
+          {% if error %}aria-invalid="true" aria-describedby="login-error"{% endif %}>
+        {% if error %}<p class="field-error" id="login-error">{{ error }}</p>{% endif %}
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="field-row">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required>
+          <button type="button" class="btn btn--quiet btn--sm" data-pw-toggle="password" aria-label="Show password">Show</button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Sign in</button>
+    </form>
+    <p class="meta">New here? <a href="/signup">Create an account</a>.</p>
+
+    <div class="demo-hint">
+      <p class="meta-label">Demo account</p>
+      <p class="demo-hint__cred">Demo: cenius@cenius.ai / cenius</p>
+      <p class="meta">Also seeded: demo@renewly.app / demo1234</p>
+      <button type="button" class="btn btn--quiet btn--sm" data-fill-demo>Fill demo credentials</button>
+    </div>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <p class="eyebrow">Dashboard</p>
+  <h1>What renews, and what it costs.</h1>
+  <p class="lede">
+    Normalised across weekly, monthly and yearly billing. Cancelled subscriptions never count
+    toward spend &mdash; their cost lands in the savings tally instead.
+  </p>
+</div>
+
+{% include "partials/totals_cards.html" %}
+
+<div class="grid grid--2-1">
+  <div class="col">
+    {% include "partials/upcoming_list.html" %}
+    {% include "partials/category_table.html" %}
+  </div>
+  <aside class="col col--aside">
+    {% include "partials/savings_card.html" %}
+    <section class="card" aria-labelledby="quick-heading">
+      <p class="meta-label">Actions</p>
+      <h2 class="card-title" id="quick-heading">Keep the audit current</h2>
+      <ul class="link-list">
+        <li><a href="/subscriptions/new">Add a subscription</a></li>
+        <li><a href="/subscriptions">Review every subscription</a></li>
+        <li><a href="/subscriptions?status=cancelled">Check what you cancelled</a></li>
+      </ul>
+    </section>
+  </aside>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+<section class="panel" aria-labelledby="category-heading">
+  <div class="panel__head">
+    <h2 class="section-title" id="category-heading">Spend by category</h2>
+    <p class="meta">Active subscriptions only, one column per currency in use</p>
+  </div>
+
+  {% if breakdown %}
+    <div class="table-scroll">
+      <table class="table">
+        <caption class="visually-hidden">Monthly and yearly spend per category, grouped by currency</caption>
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            {% for currency in currencies %}
+              <th scope="col" class="num">{{ currency }} / mo</th>
+              <th scope="col" class="num">{{ currency }} / yr</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in breakdown %}
+            <tr>
+              <th scope="row">{{ row.category }}</th>
+              {% for currency in currencies %}
+                {% set amounts = row.amounts[currency] %}
+                <td class="num">{{ amounts.monthly|money }}</td>
+                <td class="num">{{ amounts.yearly|money }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th scope="row">Total</th>
+            {% for currency in currencies %}
+              {% set amounts = breakdown_totals[currency] %}
+              <td class="num">{{ amounts.monthly|money }}</td>
+              <td class="num">{{ amounts.yearly|money }}</td>
+            {% endfor %}
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty">
+      <p>No active subscriptions yet, so there is nothing to break down by category.</p>
+      <a class="btn" href="/subscriptions/new">Add a subscription</a>
+    </div>
+  {% endif %}
+</section>

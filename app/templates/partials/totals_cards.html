@@ -1,0 +1,31 @@
+<section class="headline-row" aria-label="Spend headlines">
+  <div class="stat">
+    <p class="meta-label">This month</p>
+    {% if totals %}
+      {% for currency, total in totals.items() %}
+        <p class="stat__value">{{ total.monthly_cents|money }} <span class="stat__unit">{{ currency }}</span></p>
+      {% endfor %}
+    {% else %}
+      <p class="stat__value">0.00 <span class="stat__unit">no active spend</span></p>
+    {% endif %}
+    <p class="meta">Normalised monthly cost of active subscriptions.</p>
+  </div>
+
+  <div class="stat">
+    <p class="meta-label">This year</p>
+    {% if totals %}
+      {% for currency, total in totals.items() %}
+        <p class="stat__value">{{ total.yearly_cents|money }} <span class="stat__unit">{{ currency }}</span></p>
+      {% endfor %}
+    {% else %}
+      <p class="stat__value">0.00 <span class="stat__unit">no active spend</span></p>
+    {% endif %}
+    <p class="meta">Twelve months of the same billing mix.</p>
+  </div>
+
+  <div class="stat">
+    <p class="meta-label">Active subscriptions</p>
+    <p class="stat__value">{{ active_count }} <span class="stat__unit">tracked</span></p>
+    <p class="meta">{{ cancelled_count }} cancelled &middot; {{ total_count }} on file</p>
+  </div>
+</section>

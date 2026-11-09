@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Create account{% endblock %}
+{% block body_class %}page-auth{% endblock %}
+
+{% block content %}
+<div class="auth">
+  <section class="auth__intro">
+    <p class="eyebrow">Get started</p>
+    <h1>Your subscriptions, in one honest view.</h1>
+    <p class="lede">Create a local account and start tracking what renews, what it costs per month and per year, and what you have already cancelled.</p>
+    <ul class="bullets">
+      <li>No bank connection and no card required.</li>
+      <li>Data lives in the SQLite file inside this project.</li>
+      <li>Cancel any subscription to see the saving add up.</li>
+    </ul>
+  </section>
+
+  <section class="auth__card" aria-labelledby="signup-heading">
+    <h2 class="card-title" id="signup-heading">Create account</h2>
+    {% if errors.form %}
+      <p class="alert" role="alert">{{ errors.form }}</p>
+    {% endif %}
+    <form method="post" action="/signup" class="stack" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="username"
+          inputmode="email"
+          required
+          value="{{ values.email or email }}"
+          {% if errors.email %}aria-invalid="true" aria-describedby="email-error"{% endif %}>
+        {% if errors.email %}<p class="field-error" id="email-error">{{ errors.email }}</p>{% endif %}
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="field-row">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="new-password"
+            required
+            minlength="8"
+            aria-describedby="password-hint{% if errors.password %}-error{% endif %}"
+            {% if errors.password %}aria-invalid="true"{% endif %}>
+          <button type="button" class="btn btn--quiet btn--sm" data-pw-toggle="password" aria-label="Show password">Show</button>
+        </div>
+        <p class="field-hint" id="password-hint">At least 8 characters.</p>
+        {% if errors.password %}<p class="field-error" id="password-hint-error">{{ errors.password }}</p>{% endif %}
+      </div>
+      <div class="field">
+        <label for="confirm_password">Confirm password</label>
+        <input
+          id="confirm_password"
+          name="confirm_password"
+          type="password"
+          autocomplete="new-password"
+          required
+          minlength="8"
+          {% if errors.confirm_password %}aria-invalid="true" aria-describedby="confirm-error"{% endif %}>
+        {% if errors.confirm_password %}<p class="field-error" id="confirm-error">{{ errors.confirm_password }}</p>{% endif %}
+      </div>
+      <button type="submit" class="btn btn--primary btn--block">Create account</button>
+    </form>
+    <p class="meta">Already have an account? <a href="/login">Sign in</a>.</p>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}{{ form_title }}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <p class="eyebrow">{% if mode == 'edit' %}Edit subscription{% else %}New subscription{% endif %}</p>
+  <h1>{{ form_title }}</h1>
+  <p class="lede">
+    {% if mode == 'edit' %}
+      Update the details Renewly uses for spend totals and renewal reminders.
+    {% else %}
+      Track one recurring charge. Price is stored in cents, so totals never drift.
+    {% endif %}
+  </p>
+</div>
+
+{% if mode == 'edit' and subscription %}
+  <p class="status-line">
+    Status:
+    {% if subscription.status == 'active' %}
+      <span class="pill pill--active">Active</span>
+    {% else %}
+      <span class="pill pill--cancelled">Cancelled</span>
+      {% if subscription.cancelled_at %}<span class="meta">on {{ subscription.cancelled_at|human_date }}</span>{% endif %}
+    {% endif %}
+  </p>
+{% endif %}
+
+{% if errors.form %}
+  <p class="alert" role="alert">{{ errors.form }}</p>
+{% endif %}
+
+<form
+  method="post"
+  action="{% if mode == 'edit' %}/subscriptions/{{ subscription.id }}{% else %}/subscriptions{% endif %}"
+  class="form-card"
+  novalidate>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+  <div class="field">
+    <label for="name">Name</label>
+    <input
+      id="name" name="name" type="text" required maxlength="120"
+      autocomplete="off" placeholder="Netflix"
+      value="{{ values.name }}"
+      {% if errors.name %}aria-invalid="true" aria-describedby="name-error"{% endif %}>
+    {% if errors.name %}<p class="field-error" id="name-error">{{ errors.name }}</p>{% endif %}
+  </div>
+
+  <div class="field-grid">
+    <div class="field">
+      <label for="category">Category</label>
+      <select id="category" name="category"{% if errors.category %} aria-invalid="true" aria-describedby="category-error"{% endif %}>
+        {% for category in categories %}
+          <option value="{{ category }}"{% if values.category == category %} selected{% endif %}>{{ category }}</option>
+        {% endfor %}
+      </select>
+      {% if errors.category %}<p class="field-error" id="category-error">{{ errors.category }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+      <label for="price">Price</label>
+      <div class="field-row field-row--price">
+        <input
+          id="price" name="price" type="text" inputmode="decimal" required
+          autocomplete="off" placeholder="15.49"
+          value="{{ values.price }}"
+          {% if errors.price %}aria-invalid="true" aria-describedby="price-error"{% endif %}>
+        <label class="visually-hidden" for="currency">Currency</label>
+        <select id="currency" name="currency"{% if errors.currency %} aria-invalid="true" aria-describedby="currency-error"{% endif %}>
+          {% for currency in currencies %}
+            <option value="{{ currency }}"{% if values.currency == currency %} selected{% endif %}>{{ currency }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <p class="field-hint" id="price-hint">Up to two decimals, greater than 0.</p>
+      {% if errors.price %}<p class="field-error" id="price-error">{{ errors.price }}</p>{% endif %}
+      {% if errors.currency %}<p class="field-error" id="currency-error">{{ errors.currency }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+      <label for="billing_cycle">Billing cycle</label>
+      <select id="billing_cycle" name="billing_cycle"{% if errors.billing_cycle %} aria-invalid="true" aria-describedby="cycle-error"{% endif %}>
+        {% for cycle in billing_cycles %}
+          <option value="{{ cycle }}"{% if values.billing_cycle == cycle %} selected{% endif %}>{{ cycle|capitalize }}</option>
+        {% endfor %}
+      </select>
+      {% if errors.billing_cycle %}<p class="field-error" id="cycle-error">{{ errors.billing_cycle }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+      <label for="next_renewal_date">Next renewal date</label>
+      <input
+        id="next_renewal_date" name="next_renewal_date" type="date" required
+        value="{{ values.next_renewal_date }}"
+        {% if errors.next_renewal_date %}aria-invalid="true" aria-describedby="renewal-error"{% endif %}>
+      <p class="field-hint">Past dates are rolled forward by the billing cycle.</p>
+      {% if errors.next_renewal_date %}<p class="field-error" id="renewal-error">{{ errors.next_renewal_date }}</p>{% endif %}
+    </div>
+
+    <div class="field">
+      <label for="reminder_days">Reminder lead time</label>
+      <select id="reminder_days" name="reminder_days"{% if errors.reminder_days %} aria-invalid="true" aria-describedby="reminder-error"{% endif %}>
+        {% for days in reminder_days %}
+          <option value="{{ days }}"{% if values.reminder_days|string == days|string %} selected{% endif %}>{{ days }} day{% if days != 1 %}s{% endif %} before</option>
+        {% endfor %}
+      </select>
+      {% if errors.reminder_days %}<p class="field-error" id="reminder-error">{{ errors.reminder_days }}</p>{% endif %}
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="btn btn--primary">{% if mode == 'edit' %}Save changes{% else %}Add subscription{% endif %}</button>
+    <a class="btn btn--quiet" href="/subscriptions">Cancel</a>
+  </div>
+</form>
+{% endblock %}

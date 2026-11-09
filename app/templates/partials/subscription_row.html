@@ -1,0 +1,43 @@
+{% set sub = row.subscription %}
+<tr{% if sub.status == 'cancelled' %} class="row--cancelled"{% endif %}>
+  <th scope="row">
+    <a href="/subscriptions/{{ sub.id }}/edit">{{ sub.name }}</a>
+    <span class="cell-meta">{{ sub.category }}</span>
+  </th>
+  <td class="nowrap">{{ sub.price_cents|money }} {{ sub.currency }} / {{ sub.billing_cycle|cycle_unit }}</td>
+  <td class="nowrap">
+    {{ row.effective_date|human_date }}
+    {% if row.rolled %}<span class="cell-meta">rolled forward</span>{% endif %}
+  </td>
+  <td class="nowrap">Reminder: {{ sub.reminder_days }} day{% if sub.reminder_days != 1 %}s{% endif %} before</td>
+  <td>
+    {% if sub.status == 'active' %}
+      <span class="pill pill--active">Active</span>
+    {% else %}
+      <span class="pill pill--cancelled">Cancelled</span>
+      <span class="cell-meta">
+        {% if sub.cancelled_at %}Cancelled on {{ sub.cancelled_at|human_date }}{% else %}Cancelled{% endif %}
+      </span>
+    {% endif %}
+  </td>
+  <td>
+    <div class="row-actions">
+      <a class="btn btn--quiet btn--sm" href="/subscriptions/{{ sub.id }}/edit">Edit</a>
+      {% if sub.status == 'active' %}
+        <form method="post" action="/subscriptions/{{ sub.id }}/cancel" class="inline-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button type="submit" class="btn btn--quiet btn--sm">Cancel</button>
+        </form>
+      {% else %}
+        <form method="post" action="/subscriptions/{{ sub.id }}/resume" class="inline-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button type="submit" class="btn btn--quiet btn--sm">Resume</button>
+        </form>
+      {% endif %}
+      <form method="post" action="/subscriptions/{{ sub.id }}/delete" class="inline-form" data-confirm="Delete {{ sub.name }}? This cannot be undone.">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button type="submit" class="btn btn--danger btn--sm">Delete</button>
+      </form>
+    </div>
+  </td>
+</tr>

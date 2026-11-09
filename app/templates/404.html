@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title or "Page not found" }}{% endblock %}
+
+{% block content %}
+<div class="page-head">
+  <p class="eyebrow">404</p>
+  <h1>{{ page_title or "Page not found" }}</h1>
+  <p class="lede">{{ message or "That page does not exist." }}</p>
+  <p class="page-head__action">
+    <a class="btn btn--primary" href="{{ '/subscriptions' if current_user else '/login' }}">
+      {% if current_user %}Back to subscriptions{% else %}Go to sign in{% endif %}
+    </a>
+  </p>
+</div>
+{% endblock %}

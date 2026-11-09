@@ -1,0 +1,25 @@
+<dialog class="cmdk" id="cmdk" aria-label="Jump to a page or subscription">
+  <div class="cmdk__head">
+    <label class="cmdk__label" for="cmdk-input">Jump to</label>
+    <input
+      class="cmdk__input"
+      id="cmdk-input"
+      type="search"
+      autocomplete="off"
+      placeholder="Search pages and subscriptions"
+      aria-describedby="cmdk-help">
+    <button type="button" class="btn btn--quiet btn--sm" data-cmdk-close>Close</button>
+  </div>
+  <ul class="cmdk__list" id="cmdk-list">
+    {% for item in palette_items %}
+      <li class="cmdk__row">
+        <a class="cmdk__item" href="{{ item.href }}" data-cmdk-label="{{ item.label|lower }} {{ item.hint|lower }}">
+          <span class="cmdk__item-label">{{ item.label }}</span>
+          <span class="cmdk__item-hint">{{ item.hint }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+  <p class="cmdk__empty meta" id="cmdk-empty" hidden>No matches. Try another word.</p>
+  <p class="cmdk__help meta" id="cmdk-help">Type to filter, arrow keys to move, Enter to open, Esc to close.</p>
+</dialog>
