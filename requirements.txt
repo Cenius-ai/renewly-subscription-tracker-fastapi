@@ -1,0 +1,11 @@
+# Renewly runtime dependencies (Python 3.11+)
+fastapi==0.115.6
+uvicorn==0.34.0
+jinja2==3.1.5
+sqlalchemy==2.0.36
+python-multipart==0.0.31
+itsdangerous==2.2.0
+
+# Test suite (run with `pytest`)
+pytest==8.4.2
+httpx==0.27.2

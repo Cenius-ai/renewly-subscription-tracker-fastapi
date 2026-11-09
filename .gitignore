@@ -1,0 +1,17 @@
+# Local configuration and secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Renewly's SQLite database (created on first run)
+*.db
+*.db-journal
+*.db-wal
+
+# OS noise
+.DS_Store
