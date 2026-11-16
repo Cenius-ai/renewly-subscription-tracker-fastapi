@@ -76,7 +76,7 @@ See [`INSTALL.md`](INSTALL.md) for full setup and usage instructions.
 
 ## Architecture
 
-A self-contained FastAPI project (70 files): top-level directories include `app/`, `tests/`. `install.sh` takes care of packages and initial data in a single pass; nothing else is required before launching. Full setup details: [`INSTALL.md`](INSTALL.md).
+A self-contained FastAPI project (58 files): top-level directories include `app/`, `tests/`. `install.sh` takes care of packages and initial data in a single pass; nothing else is required before launching. Full setup details: [`INSTALL.md`](INSTALL.md).
 
 ## FAQ
 
